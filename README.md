@@ -1,7 +1,7 @@
 # Spark Solutions + Leetcode SQL Questions<br/>
 <div>
-<img src="https://github.com/cM2908/leetcode-spark/blob/main/apache_spark.png" width="400" height="200"/>
-<img src="https://github.com/cM2908/leetcode-sql/blob/main/LeetCode.png" width="400" height="200"/>
+<kbd><img src="https://github.com/cM2908/leetcode-spark/blob/main/apache_spark.png" width="400" height="200"/></kbd>
+<kbd><img src="https://github.com/cM2908/leetcode-spark/blob/main/leetcode.png" width="400" height="200"/></kbd>
 </div>
 
 #### Want to practice & solve some complex questions using Spark? 
@@ -15,9 +15,9 @@
 
 #### Get Started :<br/>
 
-- (Note: This guide assumes that you already have PostgreSQL database & Apache Spark installed)<br/>
+- This guide assumes that you already have PostgreSQL database & Apache Spark installed<br/>
 - Load dump file to your local PostgreSQL setup.<br/>
-- This repository contains all the information needed to load postgresql dump file (that contains tables of all leetcode sql questions) into your local postgresql setup<br/>
+- [Leetcode-Sql](https://github.com/cM2908/leetcode-sql) This repository contains all the information needed to load postgresql dump file (that contains tables of all leetcode sql questions) into your local postgresql setup.<br/>
 
 #### Integrate Apache Spark with PostgreSQL database :<br/> 
 
