@@ -1,6 +1,8 @@
 # Spark Solutions + Leetcode SQL Questions<br/>
-![alt text](https://github.com/cM2908/leetcode-sql/blob/main/LeetCode.png)
-
+<div>
+<img src="https://github.com/cM2908/leetcode-spark/blob/main/apache_spark.png" width="400" height="200"/>
+<img src="https://github.com/cM2908/leetcode-sql/blob/main/LeetCode.png" width="400" height="200"/>
+</div>
 
 #### Want to practice & solve some complex questions using Spark? 
 - Then nothing is better than solving some Leetcode questions, but you might think how, read along & you will get a fair idea.<br/>
