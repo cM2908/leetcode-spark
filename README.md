@@ -60,3 +60,11 @@ scala> val joinedDF = employeeDF.as("emp")
 scala> joinedDF.show
 ```
 
+#### Want to Contribute :<br/>
+
+- Contribute by providing solution of any question in either/all of these dialacts (Spark DataFrame,Spark DataSet,Spark RDD,Spark SQL)
+- Forked the repository 
+- Create solution file with proper name (eg. "175. Combine Two Tables (Easy).txt")
+- Create Pull Request
+- After review I'll merge it with the main repository.
+- Congratulations, you've contributed something to the data community.
