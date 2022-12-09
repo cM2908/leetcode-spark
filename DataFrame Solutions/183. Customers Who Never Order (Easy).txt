@@ -1,0 +1,17 @@
+val query = "(SELECT * FROM customers_183) AS customers"
+
+val customerDF = spark.read.jdbc(url, query, connectionProperties)
+
+val query = "(SELECT * FROM orders_183) AS orders"
+
+val orderDF = spark.read.jdbc(url, query, connectionProperties)
+
+// Direct Method
+
+val joinedDF = customerDF.as("c").join(orderDF.as("o"),$"c.id"===$"o.customer_id","left_anti").select($"c.name")
+
+//Conventional Method
+
+val joinedDF = customerDF.as("c").join(orderDF.as("o"),$"c.id"===$"o.customer_id","left_outer").where($"o.id".isNull).select($"c.name")
+
+joinedDF.show

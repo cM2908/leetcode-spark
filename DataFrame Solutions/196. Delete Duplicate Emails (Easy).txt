@@ -1,0 +1,11 @@
+import org.apache.spark.sql.expressions.Window
+
+val query = "(SELECT * FROM person_196) AS person"
+
+val personDF = spark.read.jdbc(url, query, connectionProperties)
+
+val w = Window.partitionBy("email")
+
+val distinctPersonDF = personDF.withColumn("min",min($"id").over(w)).where($"min"===$"id").drop($"min")
+
+distinctPersonDF.show

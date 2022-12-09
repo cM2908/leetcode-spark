@@ -1,0 +1,17 @@
+val query = "(SELECT * FROM teams_1212) AS teams"
+
+val teamsDF = spark.read.jdbc(url, query, connectionProperties)
+
+val query = "(SELECT * FROM matches_1212) AS matches"
+
+val matchesDF = spark.read.jdbc(url, query, connectionProperties)
+
+val tiedMatchesDF = matchesDF.where($"guest_goals" === $"host_goals").select($"guest_team",$"host_team",$"guest_goals",$"host_goals")
+
+val unionDF = matchesDF.select($"host_team",$"guest_team",$"host_goals",$"guest_goals").union(tiedMatchesDF)
+
+val reportDF = unionDF.withColumn("winner",when($"host_goals">$"guest_goals",$"host_team").when($"host_goals"<$"guest_goals",$"host_team").otherwise($"host_team")).withColumn("points",when($"host_goals"===$"guest_goals",lit(1)).otherwise(lit(3))).select($"winner",$"points").groupBy($"winner").agg(sum($"points").as("num_points"))
+
+val resultDF = teamsDF.as("t").join(reportDF.as("r"),$"t.team_id"===$"r.winner","left_outer").select($"t.team_id",$"t.team_name",coalesce($"r.num_points",lit(0))).orderBy($"r.num_points".desc,$"t.team_id")
+
+resultDF.show

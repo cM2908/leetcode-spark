@@ -1,0 +1,15 @@
+val query = "(SELECT * FROM accounts_1907) AS accounts"
+
+val accountsDF = spark.read.jdbc(url, query, connectionProperties)
+
+val categorizedDF = accountsDF.withColumn("category",when($"income"<20000,"Low Salary").when($"income">=20000 && $"income"<=50000,"Average Salary").otherwise("High Salary"))
+
+val groupedDF = categorizedDF.groupBy($"category").agg(count($"account_id").as("accounts_count"))
+
+val categoryDF = Seq("Low Salary","Average Salary","High Salary").toDF("category")
+
+val resultDF = categoryDF.as("c")
+		.join(groupedDF.as("g"),$"c.category"===$"g.category","left_outer")
+		.select($"c.category",coalesce($"g.accounts_count",lit(0)).as("accounts_count"))
+
+resultDF.show

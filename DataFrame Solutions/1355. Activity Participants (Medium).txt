@@ -1,0 +1,9 @@
+val query = "(SELECT * FROM friends_1355) AS friends"
+
+val friendsDF = spark.read.jdbc(url, query, connectionProperties)
+
+val groupedDF = friendsDF.groupBy($"activity").agg(count($"id").as("cnt"))
+
+val resultDF = groupedDF.withColumn("min_count",min($"cnt").over()).withColumn("max_count",max($"cnt").over()).where($"cnt"=!=$"max_count" && $"cnt"=!=$"min_count").select($"activity")
+
+resultDF.show

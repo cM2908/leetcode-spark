@@ -1,0 +1,8 @@
+val query = "(SELECT * FROM person_182) AS person"
+
+val personDF = spark.read.jdbc(url, query, connectionProperties)
+
+val duplicateDF = personDF.groupBy(col("email")).agg(count(col("id")).as("cnt")).where($"cnt">1).select(col("email"))
+
+duplicateDF.show
+

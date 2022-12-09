@@ -1,0 +1,13 @@
+val query = "(SELECT * FROM employee_577) AS employee"
+
+val employeeDF = spark.read.jdbc(url, query, connectionProperties)
+
+val query = "(SELECT * FROM bonus_577) AS bonus"
+
+val bonusDF = spark.read.jdbc(url, query, connectionProperties)
+
+val resultDF = employeeDF.as("emp")
+		.join(bonusDF.as("bn"),$"emp.empId"===$"bn.empId","left_outer")
+		.where($"bn.bonus".isNull || $"bn.bonus"<1000)
+		.select($"emp.name",$"bn.bonus")
+resultDF.show

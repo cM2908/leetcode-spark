@@ -1,0 +1,7 @@
+val query = "(SELECT * FROM customer_584) AS customer"
+
+val customerDF = spark.read.jdbc(url, query, connectionProperties)
+
+val resultDF = customerDF.where($"reference_id".isNull || $"reference_id" =!= 2).select($"name")
+
+resultDF.show

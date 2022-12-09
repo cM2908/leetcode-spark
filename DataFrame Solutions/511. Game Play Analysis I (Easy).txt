@@ -1,0 +1,10 @@
+val query = "(SELECT * FROM activity_511) AS activity"
+
+val activityDF = spark.read.jdbc(url, query, connectionProperties)
+
+val firstloginDF = activityDF
+		.groupBy($"player_id")
+		.agg(min($"event_date").as("first_login"))
+		
+
+firstloginDF.show

@@ -1,0 +1,13 @@
+val query = "(SELECT * FROM activity_511) AS activity"
+
+val activityDF = spark.read.jdbc(url, query, connectionProperties)
+
+val firstloginDF = activityDF
+		.groupBy($"player_id")
+		.agg(min($"event_date").as("first_login"))
+		
+val fisrtDeviceDF = activityDF.as("act")
+			.join(firstloginDF.as("fl"),$"act.player_id"===$"fl.player_id" && $"act.event_date"===$"fl.first_login","inner")
+			.select($"act.player_id",$"act.device_id")
+			
+fisrtDeviceDF.show

@@ -1,0 +1,10 @@
+val query = "(SELECT * FROM person_175) AS person"
+val personDF = spark.read.jdbc(url, query, connectionProperties)
+
+val query = "(SELECT * FROM address_175) AS address"
+val addressDF = spark.read.jdbc(url, query, connectionProperties)
+
+val joinCondition = personDF.col("personid") === addressDF.col("personid")
+val joinedDF = personDF.join(addressDF,joinCondition,"inner")
+
+joinedDF.show

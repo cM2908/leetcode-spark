@@ -1,0 +1,7 @@
+val query = "(SELECT * FROM world_595) AS world"
+
+val worldDF = spark.read.jdbc(url, query, connectionProperties)
+
+val resultDF = worldDF.where($"population" >= 25000000 || $"area" >= 3000000).select($"name",$"population",$"area")
+
+resultDF.show

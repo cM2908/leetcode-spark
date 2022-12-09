@@ -1,0 +1,7 @@
+val query = "(SELECT * FROM orders_586) AS orders"
+
+val ordersDF = spark.read.jdbc(url, query, connectionProperties)
+
+val resultDF = ordersDF.groupBy($"customer_number").agg(count($"order_number").as("cnt")).orderBy(desc("cnt")).select($"customer_number").limit(1)
+
+resultDF.show

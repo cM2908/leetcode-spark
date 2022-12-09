@@ -1,0 +1,7 @@
+val query = "(SELECT * FROM employee_181) AS employee"
+
+val employeeDF = spark.read.jdbc(url, query, connectionProperties)
+
+val joinedDF = employeeDF.as("emp").join(employeeDF.as("mgr"),$"emp.manager_id"===$"mgr.id" && $"emp.salary" > $"mgr.salary","inner").select($"emp.name")
+
+joinedDF.show

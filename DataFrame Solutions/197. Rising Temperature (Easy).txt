@@ -1,0 +1,9 @@
+val query = "(SELECT * FROM weather_197) AS weather"
+
+val weatherDF = spark.read.jdbc(url, query, connectionProperties)
+
+val resultDF = weatherDF.as("w1")
+		.join(weatherDF.as("w2"),$"w2.record_date"+1===$"w1.record_date" && $"w2.temperature"<$"w1.temperature","inner")
+		.select($"w1.id")
+
+resultDF.show
