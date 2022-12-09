@@ -9,9 +9,13 @@
 - Then nothing is better than solving some Leetcode questions, but you might think how, read along & you will get a fair idea.<br/>
 - Now, Execute Spark Dataframe/Dataset/SQL/RDD code on Leetcode SQL Questions.
 
+#### Problem statements of all questions including leetcode premium questions :<br/>
+
+- https://www.jiakaobo.com/leetcode <br/>
+- https://leetcode.ca <br/>
 
 #### Repository Contains :<br/>
-- Spark Dataframe Solutions on Leetcode Questions <br/>
+- Spark Dataframe/Dataset/SQL/RDD Solutions on Leetcode Questions <br/>
 - PostgreSQL Dump File (leetcodedb.sql)<br/>
 
 #### Get Started :<br/>
