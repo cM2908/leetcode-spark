@@ -1,0 +1,24 @@
+val query = "(SELECT * FROM customers_1596) AS customers"
+
+val customersDF = spark.read.jdbc(url, query, connectionProperties)
+
+val query = "(SELECT * FROM orders_1596) AS orders"
+
+val ordersDF = spark.read.jdbc(url, query, connectionProperties)
+
+val query = "(SELECT * FROM products_1596) AS products"
+
+val productsDF = spark.read.jdbc(url, query, connectionProperties)
+
+
+val groupedDF = ordersDF.groupBy($"customer_id",$"product_id").agg(count(lit(1)).as("cnt"))
+
+import org.apache.spark.sql.expressions.Window
+
+val windowSpec = Window.partitionBy("customer_id").orderBy(desc("cnt"))
+
+val rankedDF = groupedDF.withColumn("rank",dense_rank().over(windowSpec)).where($"rank"===lit(1)).select($"customer_id",$"product_id")
+
+val resultDF = rankedDF.as("r").join(productsDF.as("p"),$"p.product_id"===$"r.product_id").selectExpr("r.*","product_name")
+
+resultDF.show

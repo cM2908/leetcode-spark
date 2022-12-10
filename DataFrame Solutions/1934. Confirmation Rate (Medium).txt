@@ -1,0 +1,15 @@
+val query = "(SELECT * FROM signups_1934) AS signups"
+
+val signupsDF = spark.read.jdbc(url, query, connectionProperties)
+
+val query = "(SELECT * FROM confirmations_1934) AS confirmations"
+
+val confirmationsDF = spark.read.jdbc(url, query, connectionProperties)
+
+import org.apache.spark.sql.expressions.Window
+
+val w = Window.partitionBy("user_id")
+
+val crDF = confirmationsDF.withColumn("confirmation_count",count(when($"action"===lit("confirmed"),lit(1)).otherwise(null)).over(w)).withColumn("total_count",count($"action").over(w)).select($"user_id",round($"confirmation_count"/$"total_count",2).as("confirmation_rate"))
+
+val resultDF = signupsDF.as("s").join(crDF.as("c"),$"s.user_id"===$"c.user_id","left_outer").select($"s.user_id",coalesce($"confirmation_rate",lit(0))).distinct

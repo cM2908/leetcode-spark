@@ -1,0 +1,23 @@
+val query = "(SELECT * FROM members_2051) AS members"
+
+val membersDF = spark.read.jdbc(url, query, connectionProperties)
+
+val query = "(SELECT * FROM visits_2051) AS visits"
+
+val visitsDF = spark.read.jdbc(url, query, connectionProperties)
+
+val query = "(SELECT * FROM purchases_2051) AS purchases"
+
+val purchasesDF = spark.read.jdbc(url, query, connectionProperties)
+
+import org.apache.spark.sql.expressions.Window
+
+val w = Window.partitionBy("member_id")
+
+val joinedDF = visitsDF.as("v").join(purchasesDF.as("p"),$"v.visit_id"===$"p.visit_id","left_outer").withColumn("purchase_count",count(when($"p.visit_id".isNotNull,lit(1))).over(w)).withColumn("total_count",count($"v.visit_id").over(w)).select($"member_id",($"purchase_count"*lit(100)/$"total_count").as("conversion")).distinct
+
+val conDF = joinedDF.withColumn("category",when($"conversion">=80,"Diamond").when($"conversion">=50 && $"conversion"<80,"Gold").when($"conversion"<50,"Silver"))
+
+val resultDF = membersDF.as("m").join(conDF.as("c"),$"m.member_id"===$"c.member_id","left_outer").select($"m.member_id",$"m.name",coalesce($"c.category",lit("Bronze")))
+
+resultDF.show
