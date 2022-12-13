@@ -1,0 +1,11 @@
+val query = "(SELECT * FROM school_1988) AS school"
+
+val schoolDF = spark.read.jdbc(url, query, connectionProperties)
+
+val query = "(SELECT * FROM exam_1988) AS exam"
+
+val examDF = spark.read.jdbc(url, query, connectionProperties)
+
+val resultDF = schoolDF.as("s").join(examDF.as("e"),$"s.capacity">=$"e.student_count","left_outer").groupBy($"s.school_id").agg(coalesce(min($"e.score"),lit(-1)).as("score"))
+
+resultDF.show

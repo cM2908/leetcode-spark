@@ -1,0 +1,11 @@
+val query = "(SELECT * FROM sales_1445) AS sales"
+
+val salesDF = spark.read.jdbc(url, query, connectionProperties)
+
+val applesDF = salesDF.where($"fruit"==="apples")
+
+val orangesDF = salesDF.where($"fruit"==="oranges")
+
+val resultDF = applesDF.as("a").join(orangesDF.as("o"),$"a.sale_date"===$"o.sale_date","full_outer").select($"a.sale_date",($"a.sold_num"-$"o.sold_num").as("diff"))
+
+resultDF.show

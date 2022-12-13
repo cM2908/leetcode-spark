@@ -1,0 +1,17 @@
+val query = "(SELECT * FROM users_1158) AS users"
+
+val usersDF = spark.read.jdbc(url, query, connectionProperties)
+
+val query = "(SELECT * FROM orders_1158) AS orders"
+
+val ordersDF = spark.read.jdbc(url, query, connectionProperties)
+
+val query = "(SELECT * FROM items_1158) AS items"
+
+val itemsDF = spark.read.jdbc(url, query, connectionProperties)
+
+val orders2019DF = ordersDF.where(year($"order_date")===2019).groupBy($"buyer_id").agg(count($"order_id").as("orders_in_2019"))
+
+val resultDF = usersDF.as("u").join(orders2019DF.as("o"),$"u.user_id"===$"o.buyer_id","left_outer").select($"u.user_id",$"u.join_date",coalesce($"o.orders_in_2019",lit(0)))
+
+resultDF.show
